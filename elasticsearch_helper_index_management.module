@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for elasticsearch_helper_index_management.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function elasticsearch_helper_index_management_form_elasticsearch_helper_settings_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['index_management_message'] = [
+    '#type' => 'link',
+    '#url' => Url::fromRoute('elasticsearch_helper_index_management.index_list_controller_display'),
+    '#title' => t('Index Management'),
+  ];
+}
