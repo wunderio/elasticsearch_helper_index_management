@@ -1,0 +1,4 @@
+elasticsearch_helper_index_management.index_list_controller_display:
+  title: 'Index Management'
+  route_name: elasticsearch_helper_index_management.index_list_controller_display
+  base_route: elasticsearch_helper.elasticsearch_helper_settings_form
