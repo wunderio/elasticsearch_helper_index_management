@@ -1,4 +1,9 @@
-elasticsearch_helper_index_management.index_list_controller_display:
-  title: 'Index Management'
-  route_name: elasticsearch_helper_index_management.index_list_controller_display
+elasticsearch_helper_index_management.indices:
+  title: 'Indices'
+  route_name: elasticsearch_helper_index_management.index.list
   base_route: elasticsearch_helper.elasticsearch_helper_settings_form
+
+elasticsearch_helper_index_management.index.list:
+  title: 'Indices'
+  route_name: elasticsearch_helper_index_management.index.list
+  parent_id: elasticsearch_helper_index_management.indices
