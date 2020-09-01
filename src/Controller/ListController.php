@@ -13,14 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ListController extends ControllerBase {
 
   /**
-   * Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager definition.
-   *
    * @var \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager
    */
   protected $elasticsearchHelperPluginManager;
 
   /**
-   * Constructs a new ListController object.
+   * ListController constructor.
+   *
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager $elasticsearch_plugin_manager
    */
   public function __construct(ElasticsearchIndexManager $elasticsearch_plugin_manager) {
     $this->elasticsearchHelperPluginManager = $elasticsearch_plugin_manager;
@@ -46,7 +46,7 @@ class ListController extends ControllerBase {
     $header = [
       $this->t('Name'),
       $this->t('Index ID'),
-      $this->t('Entity Type'),
+      $this->t('Entity type'),
       $this->t('Action'),
     ];
 
@@ -57,7 +57,7 @@ class ListController extends ControllerBase {
       if (isset($plugin['entityType'])) {
         $action = Link::createFromRoute(
           $this->t('Manage'),
-          'elasticsearch_helper_index_management.reindex_controller_status',
+          'elasticsearch_helper_index_management.index_status',
           ['index_id' => $plugin['id']],
           ['attributes' => ['class' => 'button']]
         );

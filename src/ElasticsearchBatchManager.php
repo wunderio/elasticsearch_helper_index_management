@@ -17,7 +17,7 @@ class ElasticsearchBatchManager {
    * @param array $context
    *   The batch context.
    */
-  public static function processOne($id, &$context) {
+  public static function processOne($id, &$context = []) {
     /** @var \Drupal\elasticsearch_helper_index_management\ElasticsearchQueueManager $queue_manager */
     $queue_manager = \drupal::service('elasticsearch_helper_index_management.queue_manager');
 

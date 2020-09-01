@@ -1,39 +1,47 @@
-elasticsearch_helper_index_management.index_list_controller_display:
-  path: '/admin/config/search/elasticsearch_helper/index_management/indices'
+elasticsearch_helper_index_management.index_list:
+  path: '/admin/config/search/elasticsearch_helper/index_management'
   defaults:
     _controller: '\Drupal\elasticsearch_helper_index_management\Controller\ListController::display'
-    _title: 'Index Management'
+    _title: 'Index management'
   requirements:
     _permission: 'configured elasticsearch helper'
 
-elasticsearch_helper_index_management.reindex_controller_status:
-  path: '/admin/config/search/elasticsearch_helper/index_management/indices/status/{index_id}'
+elasticsearch_helper_index_management.index_status:
+  path: '/admin/config/search/elasticsearch_helper/index_management/{index_id}'
   defaults:
-    _controller: '\Drupal\elasticsearch_helper_index_management\Controller\ReindexController::status'
+    _controller: '\Drupal\elasticsearch_helper_index_management\Controller\StatusController::status'
     _title: 'Index status'
   requirements:
     _permission: 'configured elasticsearch helper'
 
-elasticsearch_helper_index_management.reindex_controller_queue_all:
-  path: '/admin/config/search/elasticsearch_helper/index_management/queue_all/{index_id}'
+elasticsearch_helper_index_management.queue_create:
+  path: '/admin/config/search/elasticsearch_helper/index_management/queue/{index_id}'
   defaults:
-    _controller: '\Drupal\elasticsearch_helper_index_management\Controller\ReindexController::queueAll'
-    _title: 'Queue all items for re-index'
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\QueueCreateConfirmForm'
+    _title: 'Create a re-index queue for all items'
   requirements:
     _permission: 'configured elasticsearch helper'
 
-elasticsearch_helper_index_management.reindex_controller_process_all:
-  path: '/admin/config/search/elasticsearch_helper/index_management/process_all/{index_id}'
+elasticsearch_helper_index_management.queue_process:
+  path: '/admin/config/search/elasticsearch_helper/index_management/process/{index_id}'
   defaults:
-    _controller: '\Drupal\elasticsearch_helper_index_management\Controller\ReindexController::processAll'
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\QueueProcessConfirmForm'
     _title: 'Batch process re-index queue'
   requirements:
     _permission: 'configured elasticsearch helper'
 
-elasticsearch_helper_index_management.reindex_controller_clear:
+elasticsearch_helper_index_management.queue_clear:
   path: '/admin/config/search/elasticsearch_helper/index_management/clear/{index_id}'
   defaults:
-    _controller: '\Drupal\elasticsearch_helper_index_management\Controller\ReindexController::clear'
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\QueueClearConfirmForm'
     _title: 'Remove all items from re-index queue'
+  requirements:
+    _permission: 'configured elasticsearch helper'
+
+elasticsearch_helper_index_management.settings:
+  path: '/admin/config/search/elasticsearch_helper/index_management/settings'
+  defaults:
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\SettingsForm'
+    _title: 'Index management settings'
   requirements:
     _permission: 'configured elasticsearch helper'

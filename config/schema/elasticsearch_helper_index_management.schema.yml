@@ -1,0 +1,7 @@
+elasticsearch_helper_index_management.settings:
+  type: config_object
+  label: 'Elasticsearch Helper Index Management config.'
+  mapping:
+    defer_indexing:
+      type: boolean
+      label: 'Defer indexing'
