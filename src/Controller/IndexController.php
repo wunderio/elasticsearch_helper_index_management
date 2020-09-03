@@ -171,10 +171,10 @@ class IndexController extends ControllerBase {
       ],
     ];
 
-    $build['actions']['delete'] = [
+    $build['actions']['drop'] = [
       '#type' => 'link',
-      '#title' => $this->t('Delete index'),
-      '#url' => $index->toUrl('delete'),
+      '#title' => $this->t('Drop index'),
+      '#url' => $index->toUrl('drop'),
       '#attributes' => [
         'class' => ['button', 'button--danger'],
       ],
