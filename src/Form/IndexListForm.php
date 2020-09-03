@@ -1,17 +1,18 @@
 <?php
 
-namespace Drupal\elasticsearch_helper_index_management\Controller;
+namespace Drupal\elasticsearch_helper_index_management\Form;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager;
 use Drupal\elasticsearch_helper_index_management\Index;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class IndexController
+ * Class IndexListForm
  */
-class IndexController extends ControllerBase {
+class IndexListForm extends FormBase {
 
   /**
    * @var \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager
@@ -37,11 +38,16 @@ class IndexController extends ControllerBase {
   }
 
   /**
-   * List index plugins.
-   *
-   * @return array
+   * {@inheritdoc}
    */
-  public function listing() {
+  public function getFormId() {
+    return 'elasticsearch_helper_index_management_index_list_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, $plugin = NULL) {
     // Define headers.
     $header = [
       $this->t('Label'),
@@ -51,8 +57,11 @@ class IndexController extends ControllerBase {
       $this->t('Operations'),
     ];
 
-    // Build rows.
-    $rows = [];
+    $form['listing'] = [
+      '#type' => 'table',
+      '#header' => $header,
+      '#empty' => $this->t('No index plugins are defined.'),
+    ];
 
     foreach ($this->elasticsearchIndexManager->getDefinitions() as $plugin) {
       $plugin_id = $plugin['id'];
@@ -61,10 +70,10 @@ class IndexController extends ControllerBase {
         $index = Index::createFromPluginId($plugin_id);
 
         $row = [
-          'label' => (string) $index->getLabel(),
-          'plugin_id' => $index->getId(),
-          'entity_type' => $index->getEntityType() ?: '-',
-          'bundle' => $index->getBundle() ?: '-',
+          'label' => ['#markup' => (string) $index->getLabel()],
+          'plugin_id' => ['#markup' => $index->getId()],
+          'entity_type' => ['#markup' => $index->getEntityType() ?: '-'],
+          'bundle' => ['#markup' => $index->getBundle() ?: '-'],
           'operations' => [
             'data' => [
               '#type' => 'operations',
@@ -75,22 +84,23 @@ class IndexController extends ControllerBase {
       }
       catch (PluginException $e) {
         $row = [
-          '#markup' => $this->t('Index plugin "@plugin_id" cannot be loaded.', ['@plugin_id' => $plugin_id]),
-          '#wrapper_attributes' => ['colspan' => count($header)],
+          [
+            '#markup' => $this->t('Index plugin "@plugin_id" cannot be loaded.', ['@plugin_id' => $plugin_id]),
+            '#wrapper_attributes' => ['colspan' => count($header)],
+          ],
         ];
       }
 
-      $rows[] = $row;
+      $form['listing'][$plugin_id] = $row;
     }
 
-    $build = [
-      '#type' => 'table',
-      '#header' => $header,
-      '#rows' => $rows,
-      '#empty' => $this->t('No index plugins are defined.'),
-    ];
+    return $form;
+  }
 
-    return $build;
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

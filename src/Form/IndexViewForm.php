@@ -50,7 +50,7 @@ class IndexViewForm extends FormBase {
       $index->getPluginInstance()->getPluginDefinition()['indexName'],
     ];
 
-    $build['overview'] = [
+    $form['overview'] = [
       '#type' => 'table',
       '#header' => [
         [
@@ -63,25 +63,25 @@ class IndexViewForm extends FormBase {
       '#rows' => $rows,
     ];
 
-    $build['actions'] = [
+    $form['actions'] = [
       '#type' => 'actions',
     ];
 
-    $build['actions']['reindex'] = [
+    $form['actions']['reindex'] = [
       '#type' => 'submit',
       '#value' => $this->t('Reindex'),
       '#op' => 'reindex',
       '#weight' => 10,
     ];
 
-    $build['actions']['create'] = [
+    $form['actions']['create'] = [
       '#type' => 'submit',
       '#value' => $this->t('Setup'),
       '#op' => 'setup',
       '#weight' => 20,
     ];
 
-    $build['actions']['drop'] = [
+    $form['actions']['drop'] = [
       '#type' => 'submit',
       '#value' => $this->t('Drop index'),
       '#op' => 'drop',
@@ -89,7 +89,7 @@ class IndexViewForm extends FormBase {
       '#weight' => 30,
     ];
 
-    return $build;
+    return $form;
   }
 
   /**
@@ -125,4 +125,5 @@ class IndexViewForm extends FormBase {
       $form_state->setRedirectUrl($url);
     }
   }
+
 }
