@@ -5,15 +5,15 @@ namespace Drupal\elasticsearch_helper_index_management\Form;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class DropIndexConfirmForm
+ * Class IndexSetupConfirmForm
  */
-class DropIndexConfirmForm extends IndexConfirmFormBase {
+class IndexSetupConfirmForm extends IndexConfirmFormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to drop indices?');
+    return $this->t('Are you sure you want to create indices?');
   }
 
   /**
@@ -25,21 +25,21 @@ class DropIndexConfirmForm extends IndexConfirmFormBase {
       '%label' => $this->index->getLabel(),
     ];
 
-    return $this->t('Indices managed by %label (@id) index plugin will be dropped.', $t_args);
+    return $this->t("Indices managed by %label (@id) index plugin will be created only if they don't exist.", $t_args);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'elasticsearch_helper_index_management_drop_index_confirm_form';
+    return 'elasticsearch_helper_index_management_index_setup_confirm_form';
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->index->getPluginInstance()->drop();
+    $this->index->getPluginInstance()->setup();
 
     parent::submitForm($form, $form_state);
   }

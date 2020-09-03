@@ -7,9 +7,9 @@ use Drupal\Core\Queue\QueueFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ReindexConfirmForm
+ * Class IndexReindexConfirmForm
  */
-class ReindexConfirmForm extends IndexConfirmFormBase {
+class IndexReindexConfirmForm extends IndexConfirmFormBase {
 
   /**
    * @var \Drupal\Core\Queue\QueueFactory
@@ -54,7 +54,7 @@ class ReindexConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'elasticsearch_helper_index_management_reindex_confirm_form';
+    return 'elasticsearch_helper_index_management_index_reindex_confirm_form';
   }
 
   /**
