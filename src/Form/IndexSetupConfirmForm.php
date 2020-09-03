@@ -20,12 +20,7 @@ class IndexSetupConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    $t_args = [
-      '@id' => $this->index->getId(),
-      '%label' => $this->index->getLabel(),
-    ];
-
-    return $this->t("Indices managed by %label (@id) index plugin will be created only if they don't exist.", $t_args);
+    return $this->t("Indices managed by the following index plugins will be created only if they don't exist.");
   }
 
   /**
@@ -39,7 +34,9 @@ class IndexSetupConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->index->getPluginInstance()->setup();
+    foreach ($this->indices as $index) {
+      $index->getPluginInstance()->setup();
+    }
 
     parent::submitForm($form, $form_state);
   }

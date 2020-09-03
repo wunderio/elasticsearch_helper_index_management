@@ -22,7 +22,9 @@ class IndexViewForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $plugin = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $plugin = []) {
+    // View only the first plugin.
+    $plugin = reset($plugin);
     $index = new Index($plugin);
 
     $rows['label'] = [
@@ -95,11 +97,13 @@ class IndexViewForm extends FormBase {
   /**
    * Returns title for the view page.
    *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $plugin
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface[] $plugin
    *
    * @return \Drupal\Component\Render\MarkupInterface|string
    */
-  public function viewTitle(ElasticsearchIndexInterface $plugin) {
+  public function viewTitle($plugin = []) {
+    // View only the first plugin.
+    $plugin = reset($plugin);
     $index = new Index($plugin);
 
     $t_args = [
@@ -113,15 +117,17 @@ class IndexViewForm extends FormBase {
   /**
    * @inheritDoc
    */
-  public function submitForm(array &$form, FormStateInterface $form_state, $plugin = NULL) {
-    /** @var \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $plugin */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    // View only the first plugin.
+    /** @var \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface[] $plugin */
     $plugin = $form_state->getBuildInfo()['args'][0];
+    $plugin = reset($plugin);
 
     $index = new Index($plugin);
     $triggering_element = $form_state->getTriggeringElement();
 
     if (isset($triggering_element['#op'])) {
-      $url = $index->toUrl($triggering_element['#op']);
+      $url = $index->toUrl($triggering_element['#op'], []);
       $form_state->setRedirectUrl($url);
     }
   }

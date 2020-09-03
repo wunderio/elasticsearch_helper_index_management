@@ -45,9 +45,7 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    $t_args = ['@plugin_id' => $this->index->getId()];
-
-    return $this->t('All content items managed by "@plugin_id" index plugin will be queued for re-indexing.', $t_args);
+    return $this->t('All content items managed by the following index plugins will be queued for re-indexing:');
   }
 
   /**
@@ -65,7 +63,9 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
     $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex');
 
     // Create re-index queue item.
-    $queue->createItem(['plugin_id' => $this->index->getId()]);
+    foreach ($this->getIndexIds() as $plugin_id) {
+      $queue->createItem(['plugin_id' => $plugin_id]);
+    }
 
     parent::submitForm($form, $form_state);
   }

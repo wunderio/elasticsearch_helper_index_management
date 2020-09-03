@@ -20,12 +20,7 @@ class IndexDropConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    $t_args = [
-      '@id' => $this->index->getId(),
-      '%label' => $this->index->getLabel(),
-    ];
-
-    return $this->t('Indices managed by %label (@id) index plugin will be dropped.', $t_args);
+    return $this->t('Indices managed by the following index plugins will be dropped:');
   }
 
   /**
@@ -39,7 +34,9 @@ class IndexDropConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->index->getPluginInstance()->drop();
+    foreach ($this->indices as $index) {
+      $index->getPluginInstance()->drop();
+    }
 
     parent::submitForm($form, $form_state);
   }

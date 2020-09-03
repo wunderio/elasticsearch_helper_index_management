@@ -37,13 +37,22 @@ class IndexPlugin implements ParamConverterInterface {
    * {@inheritdoc}
    *
    * @throws \Drupal\Core\ParamConverter\ParamNotConvertedException
+   *
+   * @return \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface[]
    */
   public function convert($value, $definition, $name, array $defaults) {
+    $plugin_ids = explode(',', $defaults['plugin']);
+    array_walk($plugin_ids, 'trim');
+
     try {
-      $result = $this->elasticsearchIndexManager->createInstance($defaults['plugin']);
+      $result = [];
+
+      foreach ($plugin_ids as $plugin_id) {
+        $result[] = $this->elasticsearchIndexManager->createInstance($plugin_id);
+      }
     }
     catch (\Exception $e) {
-      throw new ParamNotConvertedException(sprintf('Index plugin %s could not be loaded.', $defaults['plugin']));
+      throw new ParamNotConvertedException(sprintf('Index plugin %s could not be loaded.', $plugin_id));
     }
 
     // Set to NULL if object could not be loaded. This will trigger
