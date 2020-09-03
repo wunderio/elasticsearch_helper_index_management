@@ -4,7 +4,6 @@ namespace Drupal\elasticsearch_helper_index_management\Controller;
 
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface;
 use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager;
 use Drupal\elasticsearch_helper_index_management\Index;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -61,15 +60,6 @@ class IndexController extends ControllerBase {
       try {
         $index = Index::createFromPluginId($plugin_id);
 
-        $operations = $index->getOperations();
-
-        foreach ($operations as &$operation) {
-          if (!isset($operation['query'])) {
-            $operation['query'] = [];
-          }
-          $operation['query'] += $this->getDestinationArray();
-        }
-
         $row = [
           'label' => (string) $index->getLabel(),
           'plugin_id' => $index->getId(),
@@ -78,7 +68,7 @@ class IndexController extends ControllerBase {
           'operations' => [
             'data' => [
               '#type' => 'operations',
-              '#links' => $operations,
+              '#links' => $index->getOperations(),
             ]
           ],
         ];
@@ -101,104 +91,6 @@ class IndexController extends ControllerBase {
     ];
 
     return $build;
-  }
-
-  /**
-   * Returns index plugin status.
-   *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $plugin
-   *
-   * @return array
-   */
-  public function view(ElasticsearchIndexInterface $plugin) {
-    $index = new Index($plugin);
-
-    $rows = [
-      'label' => [
-        $this->t('Label'),
-        $index->getLabel(),
-      ],
-      'plugin_id' => [
-        $this->t('Plugin ID'),
-        $index->getId(),
-      ],
-      'entity_type' => [
-        $this->t('Entity type'),
-        $index->getEntityType() ?: '-',
-      ],
-      'bundle' => [
-        $this->t('Bundle'),
-        $index->getBundle() ?: '-',
-      ],
-      'index_name' => [
-        $this->t('Index name pattern'),
-        $index->getPluginInstance()->getPluginDefinition()['indexName'],
-      ],
-    ];
-
-    $build['overview'] = [
-      '#type' => 'table',
-      '#header' => [
-        [
-          'data' => [
-            '#markup' => $this->t('Overview'),
-          ],
-          'colspan' => 2,
-        ],
-      ],
-      '#rows' => $rows,
-    ];
-
-    $build['actions'] = [
-      '#type' => 'actions',
-    ];
-
-    $build['actions']['reindex'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Reindex'),
-      '#url' => $index->toUrl('reindex'),
-      '#attributes' => [
-        'class' => ['button'],
-      ],
-    ];
-
-    $build['actions']['create'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Setup'),
-      '#url' => $index->toUrl('setup'),
-      '#attributes' => [
-        'class' => ['button'],
-      ],
-    ];
-
-    $build['actions']['drop'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Drop index'),
-      '#url' => $index->toUrl('drop'),
-      '#attributes' => [
-        'class' => ['button', 'button--danger'],
-      ],
-    ];
-
-    return $build;
-  }
-
-  /**
-   * Returns title for the view page.
-   *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $plugin
-   *
-   * @return \Drupal\Component\Render\MarkupInterface|string
-   */
-  public function viewTitle(ElasticsearchIndexInterface $plugin) {
-    $index = new Index($plugin);
-
-    $t_args = [
-      '@id' => $index->getId(),
-      '%label' => $index->getLabel(),
-    ];
-
-    return $this->t('Index plugin %label (@id)', $t_args);
   }
 
 }
