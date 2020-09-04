@@ -38,6 +38,8 @@ class IndexSetupConfirmForm extends IndexConfirmFormBase {
       $index->getPluginInstance()->setup();
     }
 
+    $this->messenger()->addStatus('Indices have been created.');
+
     parent::submitForm($form, $form_state);
   }
 

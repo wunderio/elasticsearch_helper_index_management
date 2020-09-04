@@ -38,6 +38,8 @@ class IndexDropConfirmForm extends IndexConfirmFormBase {
       $index->getPluginInstance()->drop();
     }
 
+    $this->messenger()->addStatus('Indices have been dropped.');
+
     parent::submitForm($form, $form_state);
   }
 

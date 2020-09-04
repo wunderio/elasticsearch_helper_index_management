@@ -67,6 +67,8 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
       $queue->createItem(['plugin_id' => $plugin_id]);
     }
 
+    $this->messenger()->addStatus('Content has been queued for re-indexing.');
+
     parent::submitForm($form, $form_state);
   }
 
