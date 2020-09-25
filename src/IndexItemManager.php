@@ -55,10 +55,24 @@ class IndexItemManager implements IndexItemManagerInterface {
   /**
    * {@inheritDoc}
    */
-  public function clear() {
-    $this
-      ->database
-      ->truncate(self::DATABASE_TABLE);
+  public function clear(array $parameters = []) {
+    if ($parameters) {
+      $query = $this
+        ->database
+        ->delete(self::DATABASE_TABLE);
+
+      foreach ($parameters as $field => $value) {
+        $query->condition($field, $value);
+      }
+
+      $query->execute();
+    }
+    // Clear everything if no parameters are passed.
+    else {
+      $this
+        ->database
+        ->truncate(self::DATABASE_TABLE);
+    }
   }
 
   /**

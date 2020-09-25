@@ -19,8 +19,11 @@ interface IndexItemManagerInterface {
 
   /**
    * Clear all items.
+   *
+   * @param array $parameter
+   *   An array of parameters.
    */
-  public function clear();
+  public function clear(array $parameter = []);
 
   /**
    * Get all items by parameter.
