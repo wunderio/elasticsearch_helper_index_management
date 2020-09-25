@@ -3,11 +3,15 @@
 namespace Drupal\elasticsearch_helper_index_management\Form;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\elasticsearch_helper\ElasticsearchHelperQueue;
 use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager;
 use Drupal\elasticsearch_helper_index_management\Index;
+use Drupal\elasticsearch_helper_index_management\IndexItemManager;
+use Drupal\elasticsearch_helper_index_management\IndexItemManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,12 +25,29 @@ class IndexListForm extends FormBase {
   protected $elasticsearchIndexManager;
 
   /**
+   * @var \Drupal\elasticsearch_helper_index_management\IndexItemManager
+   */
+  protected $indexItemManager;
+
+  /**
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * IndexController constructor.
    *
    * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager $elasticsearch_index_manager
+   *   The index manager service.
+   * @param \Drupal\elasticsearch_helper_index_management\IndexItemManagerInterface $index_item_manager
+   *   The index item manager service.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database service.
    */
-  public function __construct(ElasticsearchIndexManager $elasticsearch_index_manager) {
+  public function __construct(ElasticsearchIndexManager $elasticsearch_index_manager, IndexItemManagerInterface $index_item_manager, Connection $database) {
     $this->elasticsearchIndexManager = $elasticsearch_index_manager;
+    $this->indexItemManager = $index_item_manager;
+    $this->database = $database;
   }
 
   /**
@@ -34,7 +55,9 @@ class IndexListForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.elasticsearch_index.processor')
+      $container->get('plugin.manager.elasticsearch_index.processor'),
+      $container->get('elasticsearch_helper_index_management.index_item_manager'),
+      $container->get('database')
     );
   }
 
@@ -55,6 +78,7 @@ class IndexListForm extends FormBase {
       $this->t('Machine name'),
       $this->t('Entity type'),
       $this->t('Bundle'),
+      $this->t('Indexing Status'),
       $this->t('Operations'),
     ];
 
@@ -92,6 +116,7 @@ class IndexListForm extends FormBase {
           $index->getId(),
           $index->getEntityType() ?: '-',
           $index->getBundle() ?: '-',
+          $this->getIndexingStatus($index),
           [
             'data' => [
               '#type' => 'operations',
@@ -158,6 +183,43 @@ class IndexListForm extends FormBase {
       $url = Url::fromRoute($route_name, $route_parameters);
       $form_state->setRedirectUrl($url);
     }
+  }
+
+  /**
+   * Get the current indexing status.
+   *
+   * @return string
+   *   A formatted string of the current status.
+   */
+  public function getIndexingStatus($index) {
+    // Get the failed items.
+    $failed_items = $this->indexItemManager->getAll([
+      'entity_type' => $index->getEntityType(),
+      'flag' => IndexItemManager::FLAG_FAIL,
+    ]);
+
+    try {
+      // Get current items in indexing queue.
+      $pending_items = $this->database->select(ElasticsearchHelperQueue::TABLE_NAME)
+        ->condition('entity_type', $index->getEntityType())
+        ->countQuery()->execute()->fetchField();
+    }
+    catch (\Throwable $t) {
+      $pending_items = 0;
+    }
+
+    $failing = t('Failed to index: @count', ['@count' => count($failed_items)]);
+    $pending = t('Pending for indexing: @count', ['@count' => $pending_items]);
+
+    return [
+      'data' => [
+        '#theme' => 'item_list',
+        '#list_type' => 'ul',
+        '#items' => [$failing, $pending],
+        '#attributes' => ['class' => 'mylist'],
+        '#wrapper_attributes' => ['class' => 'container'],
+      ],
+    ];
   }
 
 }
