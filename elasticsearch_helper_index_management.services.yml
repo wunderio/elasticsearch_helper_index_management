@@ -9,7 +9,7 @@ services:
       - { name: paramconverter, priority: 10}
   elasticsearch_helper_index_management.error_event_handler:
     class: Drupal\elasticsearch_helper_index_management\EventSubscriber\OperationError
-    arguments: []
+    arguments: ['@elasticsearch_helper_index_management.operations']
     tags:
       - { name: event_subscriber }
   elasticsearch_helper_index_management.operations:
