@@ -42,9 +42,12 @@ class IndexItemManager implements IndexItemManagerInterface {
     // Set created timestamp.
     $item['created'] = \Drupal::time()->getRequestTime();
 
-    $this
-      ->database
-      ->insert(self::DATABASE_TABLE)
+    $this->database
+      ->merge(static::DATABASE_TABLE)
+      ->keys([
+        'entity_type' => $item['entity_type'],
+        'entity_id' => $item['entity_id'],
+      ])
       ->fields($item)
       ->execute();
   }
