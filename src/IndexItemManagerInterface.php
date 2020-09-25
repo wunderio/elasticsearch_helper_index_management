@@ -26,7 +26,7 @@ interface IndexItemManagerInterface {
   public function clear(array $parameter = []);
 
   /**
-   * Get all items by parameter.
+   * Get all items.
    *
    * @param array $parameter
    *   An array of parameters.
@@ -35,5 +35,16 @@ interface IndexItemManagerInterface {
    *   An array of items.
    */
   public function getAll(array $parameter = []);
+
+  /**
+   * Get all items count.
+   *
+   * @param array $parameter
+   *   An array of parameters.
+   *
+   * @return array
+   *   An array of items.
+   */
+  public function countAll(array $parameter = []);
 
 }

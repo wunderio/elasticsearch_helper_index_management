@@ -92,4 +92,19 @@ class IndexItemManager implements IndexItemManagerInterface {
     return $query->execute()->fetchAll();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function countAll(array $parameter = []) {
+    $query = $this
+      ->database
+      ->select(self::DATABASE_TABLE, 'tb');
+
+    foreach ($parameter as $field => $value) {
+      $query->condition($field, $value);
+    }
+
+    return $query->countQuery()->execute()->fetchField();
+  }
+
 }

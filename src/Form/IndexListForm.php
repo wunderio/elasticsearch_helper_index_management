@@ -193,7 +193,7 @@ class IndexListForm extends FormBase {
    */
   public function getIndexingStatus($index) {
     // Get the failed items.
-    $failed_items = $this->indexItemManager->getAll([
+    $failed_items = $this->indexItemManager->countAll([
       'entity_type' => $index->getEntityType(),
       'flag' => IndexItemManager::FLAG_FAIL,
     ]);
@@ -208,14 +208,14 @@ class IndexListForm extends FormBase {
       $pending_items = 0;
     }
 
-    $failing = t('Failed to index: @count', ['@count' => count($failed_items)]);
-    $pending = t('Pending for indexing: @count', ['@count' => $pending_items]);
-
     return [
       'data' => [
         '#theme' => 'item_list',
         '#list_type' => 'ul',
-        '#items' => [$failing, $pending],
+        '#items' => [
+          t('Failed to index: @count', ['@count' => $failed_items]),
+          t('Pending for indexing: @count', ['@count' => $pending_items]),
+        ],
         '#attributes' => ['class' => 'mylist'],
         '#wrapper_attributes' => ['class' => 'container'],
       ],
