@@ -67,7 +67,9 @@ class IndexItemManager implements IndexItemManagerInterface {
   public function getAll(array $parameter = []) {
     $query = $this
       ->database
-      ->select(self::DATABASE_TABLE);
+      ->select(self::DATABASE_TABLE, 'tb');
+
+    $query->fields('tb', ['entity_type', 'entity_id', 'flag', 'created']);
 
     foreach ($parameter as $field => $value) {
       $query->condition($field, $value);
