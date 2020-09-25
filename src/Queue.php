@@ -61,14 +61,6 @@ class Queue extends DatabaseQueue {
       'description' => 'The entity id.',
     ];
 
-    $schema['fields']['flag'] = [
-      'type' => 'varchar_ascii',
-      'length' => 50,
-      'not null' => TRUE,
-      'default' => '',
-      'description' => 'Item flag status (ie. failed)',
-    ];
-
     $schema['indexes']['entity'] = ['entity_type', 'entity_id'];
     $schema['indexes']['flag'] = ['flag'];
 
