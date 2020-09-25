@@ -12,9 +12,9 @@ services:
     arguments: ['@elasticsearch_helper_index_management.operations']
     tags:
       - { name: event_subscriber }
+  elasticsearch_helper_index_management.index_item_manager:
+    class: Drupal\elasticsearch_helper_index_management\IndexItemManager
+    arguments: ['@database']
   elasticsearch_helper_index_management.operations:
     class: Drupal\elasticsearch_helper_index_management\OperationsManager
-    arguments: ['@database', '@elasticsearch_Helper_index_management.queue_factory']
-  elasticsearch_helper_index_management.queue_factory:
-    class: Drupal\elasticsearch_helper_index_management\QueueFactory
-    arguments: ['@database']
+    arguments: ['@elasticsearch_helper_index_management.index_item_manager']
