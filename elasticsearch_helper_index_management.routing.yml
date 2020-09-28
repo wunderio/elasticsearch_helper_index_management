@@ -42,6 +42,18 @@ elasticsearch_helper_index_management.index.reindex:
   requirements:
     _permission: 'configured elasticsearch helper'
 
+elasticsearch_helper_index_management.index.reset:
+  path: '/admin/config/search/elasticsearch_helper/index/reset'
+  defaults:
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\ResetConfirmForm'
+    _title: 'Reindex'
+  options:
+    parameters:
+      plugin:
+        type: elasticsearch_index_plugin
+  requirements:
+    _permission: 'configured elasticsearch helper'
+
 elasticsearch_helper_index_management.index.requeue_failed:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/requeue_failed'
   defaults:

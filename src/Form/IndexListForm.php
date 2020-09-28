@@ -155,6 +155,13 @@ class IndexListForm extends FormBase {
       '#weight' => 20,
     ];
 
+    $form['actions']['reset'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Reset Operations'),
+      '#op' => 'reset',
+      '#weight' => 30,
+    ];
+
     $form['actions']['drop'] = [
       '#type' => 'submit',
       '#value' => $this->t('Drop indices'),

@@ -145,8 +145,14 @@ class Index {
 
     $operations['requeue_failed'] = [
       'title' => t('Reindex Failed Items'),
-      'weight' => 90,
+      'weight' => 95,
       'url' => $this->toUrl('requeue_failed'),
+    ];
+
+    $operations['reset'] = [
+      'title' => t('Reset'),
+      'weight' => 105,
+      'url' => $this->toUrl('reset'),
     ];
 
     $operations['setup'] = [
