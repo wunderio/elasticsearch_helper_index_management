@@ -195,13 +195,16 @@ class IndexListForm extends FormBase {
   /**
    * Get the current indexing status.
    *
+   * @param Drupal\elasticsearch_helper_index_management\Index $index
+   *   The index plugin wrapper.
+   *
    * @return string
    *   A formatted string of the current status.
    */
-  public function getIndexingStatus($index) {
+  public function getIndexingStatus(Index $index) {
     // Get the failed items.
     $failed_items = $this->indexItemManager->countAll([
-      'entity_type' => $index->getEntityType(),
+      'index_plugin' => $index->getPluginInstance()->getPluginId(),
       'flag' => IndexItemManager::FLAG_FAIL,
     ]);
 
