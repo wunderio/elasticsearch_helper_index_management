@@ -45,6 +45,7 @@ class IndexItemManager implements IndexItemManagerInterface {
     $this->database
       ->merge(static::DATABASE_TABLE)
       ->keys([
+        'index_plugin' => $item['index_plugin'],
         'entity_type' => $item['entity_type'],
         'entity_id' => $item['entity_id'],
       ])
@@ -83,7 +84,9 @@ class IndexItemManager implements IndexItemManagerInterface {
       ->database
       ->select(self::DATABASE_TABLE, 'tb');
 
-    $query->fields('tb', ['entity_type', 'entity_id', 'flag', 'created']);
+    $query->fields('tb', [
+      'index_plugin', 'entity_type', 'entity_id', 'flag', 'created',
+    ]);
 
     foreach ($parameter as $field => $value) {
       $query->condition($field, $value);
