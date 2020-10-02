@@ -54,7 +54,7 @@ class OperationError implements EventSubscriberInterface {
       // Check if the indexing operation was done by the queue worker and if the
       // request wrapper contains an object before we flag it.
       if ($isIndexedByWorker && $object = $requestWrapper->getObject()) {
-        $this->operationsManager->flagAsFailing($object);
+        $this->operationsManager->flagAsFailing($event->getPluginInstance(), $object);
       }
     }
   }

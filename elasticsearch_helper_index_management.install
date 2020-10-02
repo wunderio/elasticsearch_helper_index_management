@@ -13,6 +13,13 @@ function elasticsearch_helper_index_management_schema() {
         'not null' => TRUE,
         'description' => 'Primary Key: Unique item ID.',
       ],
+      'index_plugin' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The index plugin id.',
+      ],
       'entity_type' => [
         'type' => 'varchar_ascii',
         'length' => 255,

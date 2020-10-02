@@ -3,6 +3,7 @@
 namespace Drupal\elasticsearch_helper_index_management;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface;
 
 /**
  * Service for providing methods related to index management operations.
@@ -25,13 +26,16 @@ class OperationsManager {
   /**
    * Flag an object as failing to index.
    *
-   * @param mixed $object
+   * @param Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $indexPlugin
+   *   The elasticsearch index plugin which is indexing the object.
+   * @param object $object
    *   The object from request wrapper.
    */
-  public function flagAsFailing($object) {
+  public function flagAsFailing(ElasticsearchIndexInterface $indexPlugin, $object) {
     // @todo, support non-entities.
     if ($object instanceof EntityInterface) {
       $this->indexItemManager->addItem([
+        'index_plugin' => $indexPlugin->getPluginId(),
         'entity_type' => $object->getEntityTypeId(),
         'entity_id' => $object->id(),
         'flag' => IndexItemManager::FLAG_FAIL,
