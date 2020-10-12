@@ -21,8 +21,8 @@ Elasticsearch Helper Index management can be installed via the
 1. Go to the `/admin/config/search/elasticsearch_helper/index` to manage index plugins.
 2. There are multiple operations available for index plugins:
    - Setup the indices managed by index plugin.
-   - Queue all content items for re-indexing.
-   - Drop the indices maanged by index plugin.
+   - Queue content items for re-indexing.
+   - Drop the indices managed by index plugin.
 
 [elasticsearch_download]: https://www.elastic.co/downloads/elasticsearch
 [elasticsearch_helper]: https://www.drupal.org/project/elasticsearch_helper
