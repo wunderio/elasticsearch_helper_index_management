@@ -4,11 +4,10 @@ namespace Drupal\elasticsearch_helper_index_management\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface;
 use Drupal\elasticsearch_helper_index_management\Index;
 
 /**
- * Class IndexViewForm
+ * Index overview form.
  */
 class IndexViewForm extends FormBase {
 

@@ -4,7 +4,7 @@ elasticsearch_helper_index_management.index.list:
     _form: '\Drupal\elasticsearch_helper_index_management\Form\IndexListForm'
     _title: 'Index plugins'
   requirements:
-    _permission: 'configured elasticsearch helper'
+    _permission: 'configure elasticsearch helper'
 
 elasticsearch_helper_index_management.index.view:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}'
@@ -16,7 +16,7 @@ elasticsearch_helper_index_management.index.view:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configured elasticsearch helper'
+    _permission: 'configure elasticsearch helper'
 
 elasticsearch_helper_index_management.index.setup:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/setup'
@@ -28,7 +28,7 @@ elasticsearch_helper_index_management.index.setup:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configured elasticsearch helper'
+    _permission: 'configure elasticsearch helper'
 
 elasticsearch_helper_index_management.index.reindex:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/reindex'
@@ -40,31 +40,15 @@ elasticsearch_helper_index_management.index.reindex:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configured elasticsearch helper'
+    _permission: 'configure elasticsearch helper'
 
-elasticsearch_helper_index_management.index.reset:
-  path: '/admin/config/search/elasticsearch_helper/index/reset'
+elasticsearch_helper_index_management.index.queue_clear:
+  path: '/admin/config/search/elasticsearch_helper/index/queue_clear'
   defaults:
-    _form: '\Drupal\elasticsearch_helper_index_management\Form\ResetConfirmForm'
-    _title: 'Reindex'
-  options:
-    parameters:
-      plugin:
-        type: elasticsearch_index_plugin
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\QueueClearConfirmForm'
+    _title: 'Clear indexing queue'
   requirements:
-    _permission: 'configured elasticsearch helper'
-
-elasticsearch_helper_index_management.index.requeue_failed:
-  path: '/admin/config/search/elasticsearch_helper/index/{plugin}/requeue_failed'
-  defaults:
-    _form: '\Drupal\elasticsearch_helper_index_management\Form\IndexRequeueFailedConfirmForm'
-    _title: 'Requeue'
-  options:
-    parameters:
-      plugin:
-        type: elasticsearch_index_plugin
-  requirements:
-    _permission: 'configured elasticsearch helper'
+    _permission: 'configure elasticsearch helper'
 
 elasticsearch_helper_index_management.index.drop:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/drop'
@@ -76,4 +60,4 @@ elasticsearch_helper_index_management.index.drop:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configured elasticsearch helper'
+    _permission: 'configure elasticsearch helper'

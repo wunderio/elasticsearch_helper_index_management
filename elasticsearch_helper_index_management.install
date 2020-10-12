@@ -4,55 +4,56 @@
  * Implements hook_schema().
  */
 function elasticsearch_helper_index_management_schema() {
-  $schema['elasticsearch_helper_index_items'] = [
-    'description' => 'Elasticsearch Helper Index Items',
+  $schema['elasticsearch_helper_indexing_status'] = [
+    'description' => 'Elasticsearch Helper indexing status table',
     'fields' => [
-      'item_id' => [
+      'sid' => [
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => 'Primary Key: Unique item ID.',
+        'description' => 'Unique status item ID.',
       ],
       'index_plugin' => [
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'The index plugin id.',
+        'description' => 'The index plugin ID.',
       ],
-      'entity_type' => [
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The entity type id.',
-      ],
-      'entity_id' => [
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The entity id.',
-      ],
-      'flag' => [
+      'status' => [
         'type' => 'varchar_ascii',
         'length' => 50,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Flag value (ie. failed)',
       ],
+      'id' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The index-able object ID.',
+      ],
+      'entity_type' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity type (if index-able object is an entity).',
+      ],
       'created' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Timestamp when the item was created.',
+        'description' => 'Timestamp when the status item was created.',
       ],
     ],
-    'primary key' => ['item_id'],
+    'primary key' => ['sid'],
     'indexes' => [
       'created' => ['created'],
-      'entity' => ['entity_id', 'entity_type'],
-      'flag' => ['flag'],
+      'object' => ['id'],
+      'entity' => ['id', 'entity_type'],
+      'status' => ['status'],
     ],
   ];
 
