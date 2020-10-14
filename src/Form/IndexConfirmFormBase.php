@@ -8,7 +8,7 @@ use Drupal\Core\Url;
 use Drupal\elasticsearch_helper_index_management\Index;
 
 /**
- * Class ConfirmFormBase
+ * Abstract class for index confirmation forms.
  */
 abstract class IndexConfirmFormBase extends ConfirmFormBase {
 

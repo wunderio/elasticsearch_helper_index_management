@@ -4,10 +4,11 @@ namespace Drupal\elasticsearch_helper_index_management\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class IndexReindexConfirmForm
+ * Index re-indexing confirmation form.
  */
 class IndexReindexConfirmForm extends IndexConfirmFormBase {
 
@@ -38,14 +39,14 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to reindex all items?');
+    return $this->t('Are you sure you want to reindex the content?');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('All content items managed by the following index plugins will be queued for re-indexing:');
+    return $this->t('Content items managed by the following index plugins will be queued for re-indexing:');
   }
 
   /**
@@ -58,9 +59,71 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildForm($form, $form_state);
+
+    $form['options'] = [
+      '#title' => $this->t('Reindex options'),
+      '#type' => 'details',
+      '#open' => TRUE,
+    ];
+
+    $form['options']['mode'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Mode'),
+      '#required' => TRUE,
+      '#options' => [
+        'simple' => $this->t('Simple reindex'),
+        'failed_only' => $this->t('Simple reindex of failed items only'),
+        'complete' => $this->t('Complete reindex'),
+      ],
+      '#default_value' => 'simple',
+      '#options_descriptions' => array(
+        'simple' => 'Re-indexes all content items.',
+        'failed_only' => 'Re-indexes only previously failed items.',
+        'complete' => 'Drops and creates the index, then re-indexes all content items.',
+      ),
+      '#after_build' => [[$this, 'buildOptionDescriptions']],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * Builds description for every option element.
+   *
+   * @param $element
+   * @param $form_state
+   *
+   * @return array
+   */
+  public function buildOptionDescriptions($element, &$form_state) {
+    foreach (Element::children($element) as $key) {
+      $element[$key]['#description'] = $this->t('@description', [
+        '@description' => $element['#options_descriptions'][$key],
+      ]);
+    }
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Get a queue.
-    $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex');
+    switch ($form_state->getValue('mode')) {
+      case 'failed_only':
+        $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex_failed_only');
+        break;
+
+      case 'complete':
+        $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex_complete');
+        break;
+
+      default:
+        $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex');
+    }
 
     // Create re-index queue item.
     foreach ($this->getIndexIds() as $plugin_id) {

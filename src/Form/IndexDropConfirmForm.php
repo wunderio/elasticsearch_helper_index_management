@@ -5,7 +5,7 @@ namespace Drupal\elasticsearch_helper_index_management\Form;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class IndexDropConfirmForm
+ * Index dropping confirmation class.
  */
 class IndexDropConfirmForm extends IndexConfirmFormBase {
 

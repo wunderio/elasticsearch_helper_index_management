@@ -3,19 +3,16 @@
 namespace Drupal\elasticsearch_helper_index_management\Form;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\elasticsearch_helper\ElasticsearchHelperQueue;
 use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager;
 use Drupal\elasticsearch_helper_index_management\Index;
-use Drupal\elasticsearch_helper_index_management\IndexItemManager;
-use Drupal\elasticsearch_helper_index_management\IndexItemManagerInterface;
+use Drupal\elasticsearch_helper_index_management\IndexingStatusManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class IndexListForm
+ * Index listing form.
  */
 class IndexListForm extends FormBase {
 
@@ -25,29 +22,21 @@ class IndexListForm extends FormBase {
   protected $elasticsearchIndexManager;
 
   /**
-   * @var \Drupal\elasticsearch_helper_index_management\IndexItemManager
+   * @var \Drupal\elasticsearch_helper_index_management\IndexingStatusManager
    */
-  protected $indexItemManager;
-
-  /**
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
+  protected $indexingStatusManager;
 
   /**
    * IndexController constructor.
    *
    * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager $elasticsearch_index_manager
    *   The index manager service.
-   * @param \Drupal\elasticsearch_helper_index_management\IndexItemManagerInterface $index_item_manager
-   *   The index item manager service.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database service.
+   * @param \Drupal\elasticsearch_helper_index_management\IndexingStatusManagerInterface $indexing_status_manager
+   *   The indexing status manager service.
    */
-  public function __construct(ElasticsearchIndexManager $elasticsearch_index_manager, IndexItemManagerInterface $index_item_manager, Connection $database) {
+  public function __construct(ElasticsearchIndexManager $elasticsearch_index_manager, IndexingStatusManagerInterface $indexing_status_manager) {
     $this->elasticsearchIndexManager = $elasticsearch_index_manager;
-    $this->indexItemManager = $index_item_manager;
-    $this->database = $database;
+    $this->indexingStatusManager = $indexing_status_manager;
   }
 
   /**
@@ -56,8 +45,7 @@ class IndexListForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.elasticsearch_index.processor'),
-      $container->get('elasticsearch_helper_index_management.index_item_manager'),
-      $container->get('database')
+      $container->get('elasticsearch_helper_index_management.indexing_status_manager')
     );
   }
 
@@ -78,7 +66,8 @@ class IndexListForm extends FormBase {
       $this->t('Machine name'),
       $this->t('Entity type'),
       $this->t('Bundle'),
-      $this->t('Indexing Status'),
+      $this->t('Indexed'),
+      $this->t('Failed'),
       $this->t('Operations'),
     ];
 
@@ -116,7 +105,8 @@ class IndexListForm extends FormBase {
           $index->getId(),
           $index->getEntityType() ?: '-',
           $index->getBundle() ?: '-',
-          $this->getIndexingStatus($index),
+          $this->getSuccessfulCount($index),
+          $this->getErrorCount($index),
           [
             'data' => [
               '#type' => 'operations',
@@ -155,19 +145,24 @@ class IndexListForm extends FormBase {
       '#weight' => 20,
     ];
 
-    $form['actions']['reset'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Reset Operations'),
-      '#op' => 'reset',
-      '#weight' => 30,
-    ];
-
     $form['actions']['drop'] = [
       '#type' => 'submit',
       '#value' => $this->t('Drop indices'),
       '#op' => 'drop',
       '#button_type' => 'danger',
       '#weight' => 30,
+    ];
+
+    $form['generic_actions'] = [
+      '#type' => 'actions',
+    ];
+
+    $form['generic_actions']['queue_clear'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Clear indexing queue'),
+      '#description' => $this->t('Removes all current items from indexing queue.'),
+      '#op' => 'reset',
+      '#weight' => 10,
     ];
 
     return $form;
@@ -193,43 +188,31 @@ class IndexListForm extends FormBase {
   }
 
   /**
-   * Get the current indexing status.
+   * Returns successful items count.
    *
-   * @param Drupal\elasticsearch_helper_index_management\Index $index
-   *   The index plugin wrapper.
+   * @param \Drupal\elasticsearch_helper_index_management\Index $index
    *
-   * @return string
-   *   A formatted string of the current status.
+   * @return int
    */
-  public function getIndexingStatus(Index $index) {
-    // Get the failed items.
-    $failed_items = $this->indexItemManager->countAll([
+  public function getSuccessfulCount(Index $index) {
+    return $this->indexingStatusManager->count([
       'index_plugin' => $index->getPluginInstance()->getPluginId(),
-      'flag' => IndexItemManager::FLAG_FAIL,
+      'status' => IndexingStatusManagerInterface::STATUS_SUCCESS,
     ]);
+  }
 
-    try {
-      // Get current items in indexing queue.
-      $pending_items = $this->database->select(ElasticsearchHelperQueue::TABLE_NAME)
-        ->condition('entity_type', $index->getEntityType())
-        ->countQuery()->execute()->fetchField();
-    }
-    catch (\Throwable $t) {
-      $pending_items = 0;
-    }
-
-    return [
-      'data' => [
-        '#theme' => 'item_list',
-        '#list_type' => 'ul',
-        '#items' => [
-          t('Failed to index: @count', ['@count' => $failed_items]),
-          t('Pending for indexing: @count', ['@count' => $pending_items]),
-        ],
-        '#attributes' => ['class' => 'mylist'],
-        '#wrapper_attributes' => ['class' => 'container'],
-      ],
-    ];
+  /**
+   * Returns failed items count.
+   *
+   * @param \Drupal\elasticsearch_helper_index_management\Index $index
+   *
+   * @return int
+   */
+  public function getErrorCount(Index $index) {
+    return $this->indexingStatusManager->count([
+      'index_plugin' => $index->getPluginInstance()->getPluginId(),
+      'status' => IndexingStatusManagerInterface::STATUS_ERROR,
+    ]);
   }
 
 }

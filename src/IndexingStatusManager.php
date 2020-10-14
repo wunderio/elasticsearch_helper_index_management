@@ -2,59 +2,66 @@
 
 namespace Drupal\elasticsearch_helper_index_management;
 
-use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
 
 /**
- * Defines the class of the Index Item Manager Service.
+ * Defines indexing status manager.
  */
-class IndexItemManager implements IndexItemManagerInterface {
+class IndexingStatusManager implements IndexingStatusManagerInterface {
 
   /**
-   * The database table for storing index items.
+   * The database table for storing indexing status items.
    *
    * @var string
    */
-  const DATABASE_TABLE = 'elasticsearch_helper_index_items';
+  const DATABASE_TABLE = 'elasticsearch_helper_indexing_status';
 
   /**
-   * Flag constant value for failed items.
-   */
-  const FLAG_FAIL = 'failed';
-
-  /**
-   * Drupal\Core\Database\Driver\mysql\Connection definition.
+   * Database instance.
    *
-   * @var \Drupal\Core\Database\Driver\mysql\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
-   * Constructs a new IndexItemStatusManager object.
+   * Time instance.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  public function __construct(Connection $database) {
+  protected $time;
+
+  /**
+   * IndexingStatusManager constructor.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   */
+  public function __construct(Connection $database, TimeInterface $time) {
     $this->database = $database;
+    $this->time = $time;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public function addItem($item) {
+  public function updateStatus(array $item) {
     // Set created timestamp.
-    $item['created'] = \Drupal::time()->getRequestTime();
+    $item['created'] = $this->time->getRequestTime();
 
     $this->database
       ->merge(static::DATABASE_TABLE)
       ->keys([
         'index_plugin' => $item['index_plugin'],
+        'id' => $item['id'],
         'entity_type' => $item['entity_type'],
-        'entity_id' => $item['entity_id'],
       ])
       ->fields($item)
       ->execute();
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function clear(array $parameters = []) {
     if ($parameters) {
@@ -77,16 +84,14 @@ class IndexItemManager implements IndexItemManagerInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getAll(array $parameter = []) {
     $query = $this
       ->database
       ->select(self::DATABASE_TABLE, 'tb');
 
-    $query->fields('tb', [
-      'index_plugin', 'entity_type', 'entity_id', 'flag', 'created',
-    ]);
+    $query->fields('tb');
 
     foreach ($parameter as $field => $value) {
       $query->condition($field, $value);
@@ -96,9 +101,9 @@ class IndexItemManager implements IndexItemManagerInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public function countAll(array $parameter = []) {
+  public function count(array $parameter = []) {
     $query = $this
       ->database
       ->select(self::DATABASE_TABLE, 'tb');

@@ -2,10 +2,8 @@
 
 namespace Drupal\elasticsearch_helper_index_management\Plugin\QueueWorker;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -57,16 +55,10 @@ class Reindex extends QueueWorkerBase implements ContainerFactoryPluginInterface
    * Executes the reindexing.
    */
   public function processItem($data) {
-    try {
-      $plugin = $this->elasticsearchIndexManager->createInstance($data['plugin_id']);
+    $plugin = $this->elasticsearchIndexManager->createInstance($data['plugin_id']);
 
-      // Re-index the content.
-      $plugin->reindex(['caller' => 'elasticsearch_helper_index_management']);
-    }
-    // Do not
-    catch (PluginException $e) {
-      throw new SuspendQueueException($e->getMessage());
-    }
+    // Re-index the content.
+    $plugin->reindex(['caller' => 'elasticsearch_helper_index_management']);
   }
 
 }
