@@ -2,6 +2,24 @@ services:
   logger.channel.elasticsearch_helper_index_management:
     parent: logger.channel_base
     arguments: ['elasticsearch_helper_index_management']
-  elasticsearch_helper_index_management.queue_manager:
-    class: Drupal\elasticsearch_helper_index_management\ElasticsearchQueueManager
-    arguments: ['@database', '@plugin.manager.elasticsearch_index.processor', '@entity_type.manager']
+  elasticsearch_helper_index_management.paramconverter.index_plugin:
+    class: Drupal\elasticsearch_helper_index_management\ParamConverter\IndexPlugin
+    arguments: ['@plugin.manager.elasticsearch_index.processor']
+    tags:
+      - { name: paramconverter, priority: 10}
+  elasticsearch_helper_index_management.indexing_status_event_subscriber:
+    class: Drupal\elasticsearch_helper_index_management\EventSubscriber\IndexingStatus
+    arguments: ['@elasticsearch_helper_index_management.index_status_operation_manager']
+    tags:
+      - { name: event_subscriber }
+  elasticsearch_helper_index_management.indexing_status_flush_event_subscriber:
+    class: Drupal\elasticsearch_helper_index_management\EventSubscriber\IndexingStatusFlush
+    arguments: ['@elasticsearch_helper_index_management.indexing_status_manager']
+    tags:
+      - { name: event_subscriber }
+  elasticsearch_helper_index_management.indexing_status_manager:
+    class: Drupal\elasticsearch_helper_index_management\IndexingStatusManager
+    arguments: ['@database', '@datetime.time']
+  elasticsearch_helper_index_management.index_status_operation_manager:
+    class: Drupal\elasticsearch_helper_index_management\IndexingStatusOperationManager
+    arguments: ['@elasticsearch_helper_index_management.indexing_status_manager']

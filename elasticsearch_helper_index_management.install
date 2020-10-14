@@ -4,68 +4,65 @@
  * Implements hook_schema().
  */
 function elasticsearch_helper_index_management_schema() {
-  $schema['es_reindex_queue'] = [
-    'description' => 'Queue table for elasticsearch re-indexing',
+  $schema['elasticsearch_helper_indexing_status'] = [
+    'description' => 'Elasticsearch Helper indexing status table',
     'fields' => [
-      'id' => [
-        'description' => 'The primary identifier for product',
+      'sid' => [
         'type' => 'serial',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-      ],
-      'plugin_id' => [
-        'description' => 'The index plugin id',
-        'type' => 'varchar',
-        'length' => 125,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'entity_type' => [
-        'description' => 'The entity type id',
-        'type' => 'varchar',
-        'length' => 125,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'entity_id' => [
-        'description' => 'The entity id',
-        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
+        'description' => 'Unique status item ID.',
       ],
-      'error' => [
-        'description' => 'Indicate if indexing of an entity resulted in an error',
-        'type' => 'int',
+      'index_plugin' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '',
+        'description' => 'The index plugin ID.',
       ],
       'status' => [
-        'description' => 'Indicate if entity has been indexed successfully',
+        'type' => 'varchar_ascii',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Flag value (ie. failed)',
+      ],
+      'id' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The index-able object ID.',
+      ],
+      'entity_type' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity type (if index-able object is an entity).',
+      ],
+      'created' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
+        'description' => 'Timestamp when the status item was created.',
       ],
     ],
+    'primary key' => ['sid'],
     'indexes' => [
-      'entity_error' => [
-        'error',
-      ],
-      'index_done' => [
-        'status',
-      ],
-    ],
-    'unique keys' => [
-      'plugin_keys' => [
-        'plugin_id',
-        'entity_type',
-        'entity_id',
-      ],
-    ],
-    'primary key' => [
-      'id',
+      'created' => ['created'],
+      'object' => ['id'],
+      'entity' => ['id', 'entity_type'],
+      'status' => ['status'],
     ],
   ];
 
   return $schema;
+}
+
+/**
+ * Install schema if module was already previously installed.
+ */
+function elasticsearch_helper_index_management_update_8001() {
+  drupal_install_schema('elasticsearch_helper_index_management');
 }
