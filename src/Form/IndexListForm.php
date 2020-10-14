@@ -158,10 +158,11 @@ class IndexListForm extends FormBase {
     ];
 
     $form['generic_actions']['queue_clear'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Clear indexing queue'),
+      '#type' => 'link',
+      '#title' => $this->t('Clear indexing queue'),
       '#description' => $this->t('Removes all current items from indexing queue.'),
-      '#op' => 'reset',
+      '#url' => Url::fromRoute('elasticsearch_helper_index_management.index.queue_clear'),
+      '#attributes' => ['class' => ['button']],
       '#weight' => 10,
     ];
 

@@ -42,8 +42,8 @@ elasticsearch_helper_index_management.index.reindex:
   requirements:
     _permission: 'configure elasticsearch helper'
 
-elasticsearch_helper_index_management.index.reset:
-  path: '/admin/config/search/elasticsearch_helper/index/reset'
+elasticsearch_helper_index_management.index.queue_clear:
+  path: '/admin/config/search/elasticsearch_helper/index/clear-queue'
   defaults:
     _form: '\Drupal\elasticsearch_helper_index_management\Form\QueueClearConfirmForm'
     _title: 'Clear indexing queue'
