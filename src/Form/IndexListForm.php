@@ -171,6 +171,25 @@ class IndexListForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $triggering_element = $form_state->getTriggeringElement();
+
+    if (isset($triggering_element['#op'])) {
+      switch ($triggering_element['#op']) {
+        case 'reindex':
+          // Validate that the user has selected a plugin from the list.
+          // If the plugin array is empty, it would throw an error in submit.
+          if (empty(array_filter($form_state->getValue('listing')))) {
+            $form_state->setErrorByName('reindex', 'Select a plugin to be re-indexed from the list');
+          }
+          break;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $triggering_element = $form_state->getTriggeringElement();
 
