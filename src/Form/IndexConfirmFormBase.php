@@ -49,7 +49,6 @@ abstract class IndexConfirmFormBase extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\Core\Routing\RouteMatchInterface $route_match */
     $route_match = $this->getRouteMatch();
 
     /** @var \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin */
