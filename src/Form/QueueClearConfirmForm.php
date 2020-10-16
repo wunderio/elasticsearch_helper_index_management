@@ -2,14 +2,16 @@
 
 namespace Drupal\elasticsearch_helper_index_management\Form;
 
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Queue clear confirmation form.
  */
-class QueueClearConfirmForm extends IndexConfirmFormBase {
+class QueueClearConfirmForm extends ConfirmFormBase {
 
   /**
    * @var \Drupal\Core\Queue\QueueInterface
@@ -45,6 +47,13 @@ class QueueClearConfirmForm extends IndexConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function getCancelUrl() {
+    return new Url('elasticsearch_helper_index_management.index.list');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
     $t_args = ['@count' => $this->indexingQueue->numberOfItems()];
 
@@ -65,8 +74,6 @@ class QueueClearConfirmForm extends IndexConfirmFormBase {
     $this->indexingQueue->deleteQueue();
 
     $this->messenger()->addStatus('Indexing queue has been cleared.');
-
-    parent::submitForm($form, $form_state);
   }
 
 }
