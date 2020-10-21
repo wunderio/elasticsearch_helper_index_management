@@ -77,7 +77,10 @@ class IndexListForm extends FormBase {
       '#empty' => $this->t('No index plugins are defined.'),
     ];
 
-    foreach ($this->elasticsearchIndexManager->getDefinitions() as $plugin) {
+    // Get plugin definitions.
+    $plugin_definitions = $this->elasticsearchIndexManager->getDefinitions();
+
+    foreach ($plugin_definitions as $plugin) {
       $plugin_id = $plugin['id'];
 
       try {
@@ -135,6 +138,7 @@ class IndexListForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Reindex'),
       '#op' => 'reindex',
+      '#access' => !empty($plugin_definitions),
       '#weight' => 10,
     ];
 
@@ -142,6 +146,7 @@ class IndexListForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Setup'),
       '#op' => 'setup',
+      '#access' => !empty($plugin_definitions),
       '#weight' => 20,
     ];
 
@@ -150,6 +155,7 @@ class IndexListForm extends FormBase {
       '#value' => $this->t('Drop indices'),
       '#op' => 'drop',
       '#button_type' => 'danger',
+      '#access' => !empty($plugin_definitions),
       '#weight' => 30,
     ];
 
