@@ -51,6 +51,32 @@ class IndexViewForm extends FormBase {
       $index->getPluginInstance()->getPluginDefinition()['indexName'],
     ];
 
+    try {
+      $existing_indices = $index->getPluginInstance()->getExistingIndices();
+    }
+    catch (\Throwable $e) {
+      $existing_indices = [];
+    }
+
+    $rows['existing_index_names'] = [
+      [
+        'data' => [
+          '#type' => 'inline_template',
+          '#template' => '<span class="title">{{ title }}</span><div class="description"><em>{{ description }}</em></div>',
+          '#context' => [
+            'title' => $this->t('Existing indices managed by the plugin'),
+            'description' => $this->t('Note: Index names matching the index name pattern are considered to be managed by the plugin.'),
+          ],
+        ],
+      ],
+      [
+        'data' => $existing_indices ? [
+          '#theme' => 'item_list',
+          '#items' => $existing_indices,
+        ] : '-',
+      ],
+    ];
+
     $form['overview'] = [
       '#type' => 'table',
       '#header' => [
