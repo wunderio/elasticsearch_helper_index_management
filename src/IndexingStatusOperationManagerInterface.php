@@ -12,31 +12,31 @@ interface IndexingStatusOperationManagerInterface {
   /**
    * Sets successful indexing status for index-able object.
    *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
-   *   The Elasticsearch index plugin which is indexing the object.
    * @param mixed $object
    *   The index-able object.
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
+   *   The Elasticsearch index plugin which is indexing the object.
    */
-  public function setSuccessIndexingStatus(ElasticsearchIndexInterface $index_plugin, $object);
+  public function setSuccessIndexingStatus($object, ElasticsearchIndexInterface $index_plugin);
 
   /**
    * Sets failing indexing status for index-able object.
    *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
-   *   The Elasticsearch index plugin which is indexing the object.
    * @param mixed $object
    *   The index-able object.
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
+   *   The Elasticsearch index plugin which is indexing the object.
    */
-  public function setErrorIndexingStatus(ElasticsearchIndexInterface $index_plugin, $object);
+  public function setErrorIndexingStatus($object, ElasticsearchIndexInterface $index_plugin);
 
   /**
    * Deletes indexing status item from the table.
    *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
    * @param $object
-   *
-   * @return mixed
+   *   The index-able object.
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin|null
+   *   The Elasticsearch index plugin which is indexing the object.
    */
-  public function deleteIndexingStatus(ElasticsearchIndexInterface $index_plugin, $object);
+  public function deleteIndexingStatus($object, ElasticsearchIndexInterface $index_plugin = NULL);
 
 }

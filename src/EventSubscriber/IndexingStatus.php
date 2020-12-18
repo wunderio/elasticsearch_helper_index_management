@@ -53,7 +53,7 @@ class IndexingStatus implements EventSubscriberInterface {
   public function onOperationError(ElasticsearchOperationErrorEvent $event) {
     if ($event->getOperation() == ElasticsearchOperations::DOCUMENT_INDEX && $object = $event->getObject()) {
       // Mark indexing status as failed.
-      $this->indexingStatusOperationManager->setErrorIndexingStatus($event->getPluginInstance(), $object);
+      $this->indexingStatusOperationManager->setErrorIndexingStatus($object, $event->getPluginInstance());
     }
   }
 
@@ -70,13 +70,13 @@ class IndexingStatus implements EventSubscriberInterface {
     if ($operation == ElasticsearchOperations::DOCUMENT_INDEX) {
       if ($this->isIndexResultSuccessful($result)) {
         // Mark indexing status as successful.
-        $this->indexingStatusOperationManager->setSuccessIndexingStatus($request_wrapper->getPluginInstance(), $request_wrapper->getObject());
+        $this->indexingStatusOperationManager->setSuccessIndexingStatus($request_wrapper->getObject(), $request_wrapper->getPluginInstance());
       }
     }
     elseif ($operation == ElasticsearchOperations::DOCUMENT_DELETE) {
       if ($this->isDeleteResultSuccessful($result)) {
         // Mark indexing status as successful.
-        $this->indexingStatusOperationManager->deleteIndexingStatus($request_wrapper->getPluginInstance(), $request_wrapper->getObject());
+        $this->indexingStatusOperationManager->deleteIndexingStatus($request_wrapper->getObject(), $request_wrapper->getPluginInstance());
       }
     }
   }

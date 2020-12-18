@@ -29,41 +29,41 @@ class IndexingStatusOperationManager implements IndexingStatusOperationManagerIn
   /**
    * {@inheritdoc}
    */
-  public function setSuccessIndexingStatus(ElasticsearchIndexInterface $index_plugin, $object) {
+  public function setSuccessIndexingStatus($object, ElasticsearchIndexInterface $index_plugin) {
     if ($object instanceof EntityInterface) {
-      $this->setEntityIndexingStatus($index_plugin, $object, IndexingStatusManagerInterface::STATUS_SUCCESS);
+      $this->setEntityIndexingStatus($object, IndexingStatusManagerInterface::STATUS_SUCCESS, $index_plugin);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setErrorIndexingStatus(ElasticsearchIndexInterface $index_plugin, $object) {
+  public function setErrorIndexingStatus($object, ElasticsearchIndexInterface $index_plugin) {
     if ($object instanceof EntityInterface) {
-      $this->setEntityIndexingStatus($index_plugin, $object, IndexingStatusManagerInterface::STATUS_ERROR);
+      $this->setEntityIndexingStatus($object, IndexingStatusManagerInterface::STATUS_ERROR, $index_plugin);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteIndexingStatus(ElasticsearchIndexInterface $index_plugin, $object) {
+  public function deleteIndexingStatus($object, ElasticsearchIndexInterface $index_plugin = NULL) {
     if ($object instanceof EntityInterface) {
-      $this->deleteEntityIndexingStatus($index_plugin, $object);
+      $this->deleteEntityIndexingStatus($object, $index_plugin);
     }
   }
 
   /**
    * Sets indexing status for index-able entity.
    *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
-   *   The Elasticsearch index plugin which is indexing the object.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The index-able entity.
    * @param $status
    *   Status name.
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
+   *   The Elasticsearch index plugin which is indexing the object.
    */
-  protected function setEntityIndexingStatus(ElasticsearchIndexInterface $index_plugin, EntityInterface $entity, $status) {
+  protected function setEntityIndexingStatus(EntityInterface $entity, $status, ElasticsearchIndexInterface $index_plugin) {
     $this->indexingStatusManager->updateStatus([
       'index_plugin' => $index_plugin->getPluginId(),
       'status' => $status,
@@ -75,15 +75,20 @@ class IndexingStatusOperationManager implements IndexingStatusOperationManagerIn
   /**
    * Deletes indexing status for given entity.
    *
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
    */
-  protected function deleteEntityIndexingStatus(ElasticsearchIndexInterface $index_plugin, EntityInterface $entity) {
-    $this->indexingStatusManager->clear([
-      'index_plugin' => $index_plugin->getPluginId(),
+  protected function deleteEntityIndexingStatus(EntityInterface $entity, ElasticsearchIndexInterface $index_plugin = NULL) {
+    $conditions = [
       'id' => $entity->id(),
       'entity_type' => $entity->getEntityTypeId(),
-    ]);
+    ];
+
+    if ($index_plugin) {
+      $conditions['index_plugin'] = $index_plugin->getPluginId();
+    }
+
+    $this->indexingStatusManager->clear($conditions);
   }
 
 }
