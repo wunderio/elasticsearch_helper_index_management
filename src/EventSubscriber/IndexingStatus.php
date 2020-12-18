@@ -73,12 +73,6 @@ class IndexingStatus implements EventSubscriberInterface {
         $this->indexingStatusOperationManager->setSuccessIndexingStatus($request_wrapper->getObject(), $request_wrapper->getPluginInstance());
       }
     }
-    elseif ($operation == ElasticsearchOperations::DOCUMENT_DELETE) {
-      if ($this->isDeleteResultSuccessful($result)) {
-        // Mark indexing status as successful.
-        $this->indexingStatusOperationManager->deleteIndexingStatus($request_wrapper->getObject(), $request_wrapper->getPluginInstance());
-      }
-    }
   }
 
   /**
@@ -92,19 +86,6 @@ class IndexingStatus implements EventSubscriberInterface {
     $body = $result->getResultBody();
 
     return isset($body['result']) && in_array($body['result'], ['created', 'updated']);
-  }
-
-  /**
-   * Returns TRUE if document delete result is successful.
-   *
-   * @param \Drupal\elasticsearch_helper\ElasticsearchRequestResultInterface $result
-   *
-   * @return bool
-   */
-  protected function isDeleteResultSuccessful(ElasticsearchRequestResultInterface $result) {
-    $body = $result->getResultBody();
-
-    return isset($body['result']) && $body['result'] == 'deleted';
   }
 
 }
