@@ -107,5 +107,4 @@ class IndexingStatus implements EventSubscriberInterface {
     return isset($body['result']) && $body['result'] == 'deleted';
   }
 
-
 }
