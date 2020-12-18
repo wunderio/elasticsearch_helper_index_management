@@ -7,6 +7,8 @@ use Drupal\Core\Database\Connection;
 
 /**
  * Defines indexing status manager.
+ *
+ * Where possible, use indexing status operation manager to change statuses.
  */
 class IndexingStatusManager implements IndexingStatusManagerInterface {
 
