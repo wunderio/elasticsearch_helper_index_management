@@ -28,10 +28,10 @@ interface IndexingStatusManagerInterface {
   /**
    * Clear all status items.
    *
-   * @param array $parameter
+   * @param array $parameters
    *   An array of parameters.
    */
-  public function clear(array $parameter = []);
+  public function clear(array $parameters = []);
 
   /**
    * Get all status items.

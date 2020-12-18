@@ -53,7 +53,7 @@ class IndexingStatus implements EventSubscriberInterface {
   public function onOperationError(ElasticsearchOperationErrorEvent $event) {
     if ($event->getOperation() == ElasticsearchOperations::DOCUMENT_INDEX && $object = $event->getObject()) {
       // Mark indexing status as failed.
-      $this->indexingStatusOperationManager->setErrorIndexingStatus($event->getPluginInstance(), $object);
+      $this->indexingStatusOperationManager->setErrorIndexingStatus($object, $event->getPluginInstance());
     }
   }
 
@@ -70,13 +70,7 @@ class IndexingStatus implements EventSubscriberInterface {
     if ($operation == ElasticsearchOperations::DOCUMENT_INDEX) {
       if ($this->isIndexResultSuccessful($result)) {
         // Mark indexing status as successful.
-        $this->indexingStatusOperationManager->setSuccessIndexingStatus($request_wrapper->getPluginInstance(), $request_wrapper->getObject());
-      }
-    }
-    elseif ($operation == ElasticsearchOperations::DOCUMENT_DELETE) {
-      if ($this->isDeleteResultSuccessful($result)) {
-        // Mark indexing status as successful.
-        $this->indexingStatusOperationManager->deleteIndexingStatus($request_wrapper->getPluginInstance(), $request_wrapper->getObject());
+        $this->indexingStatusOperationManager->setSuccessIndexingStatus($request_wrapper->getObject(), $request_wrapper->getPluginInstance());
       }
     }
   }
@@ -92,19 +86,6 @@ class IndexingStatus implements EventSubscriberInterface {
     $body = $result->getResultBody();
 
     return isset($body['result']) && in_array($body['result'], ['created', 'updated']);
-  }
-
-  /**
-   * Returns TRUE if document delete result is successful.
-   *
-   * @param \Drupal\elasticsearch_helper\ElasticsearchRequestResultInterface $result
-   *
-   * @return bool
-   */
-  protected function isDeleteResultSuccessful(ElasticsearchRequestResultInterface $result) {
-    $body = $result->getResultBody();
-
-    return isset($body['result']) && $body['result'] == 'deleted';
   }
 
 }
