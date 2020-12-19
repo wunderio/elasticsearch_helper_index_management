@@ -75,12 +75,14 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
       '#options' => [
         'simple' => $this->t('Simple reindex'),
         'failed_only' => $this->t('Simple reindex of failed items only'),
+        'unprocessed_only' => $this->t('Simple reindex of unprocessed items only'),
         'complete' => $this->t('Complete reindex'),
       ],
       '#default_value' => 'simple',
       '#options_descriptions' => array(
         'simple' => 'Re-indexes all content items.',
         'failed_only' => 'Re-indexes only previously failed items.',
+        'unprocessed_only' => 'Re-indexes only unprocessed items.',
         'complete' => 'Drops and creates the index, then re-indexes all content items.',
       ),
       '#after_build' => [[$this, 'buildOptionDescriptions']],
@@ -113,6 +115,10 @@ class IndexReindexConfirmForm extends IndexConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Get a queue.
     switch ($form_state->getValue('mode')) {
+      case 'unprocessed_only':
+        $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex_unprocessed_only');
+        break;
+
       case 'failed_only':
         $queue = $this->queueFactory->get('elasticsearch_helper_index_management_reindex_failed_only');
         break;
