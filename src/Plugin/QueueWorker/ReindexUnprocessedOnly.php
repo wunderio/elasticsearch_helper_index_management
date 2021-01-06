@@ -115,6 +115,8 @@ class ReindexUnprocessedOnly extends QueueWorkerBase implements ContainerFactory
    * @param $bundle
    *
    * @return array
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getUnprocessedItems($entity_type_id, $bundle) {
     if ($entity_type_instance = $this->entityTypeManager->getDefinition($entity_type_id, FALSE)) {
