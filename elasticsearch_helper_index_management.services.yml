@@ -23,3 +23,9 @@ services:
   elasticsearch_helper_index_management.index_status_operation_manager:
     class: Drupal\elasticsearch_helper_index_management\IndexingStatusOperationManager
     arguments: ['@elasticsearch_helper_index_management.indexing_status_manager']
+  logger.channel.elasticsearch_helper_index_management:
+    parent: logger.channel_base
+    arguments: ['elasticsearch_helper_index_management']
+  elasticsearch_helper_index_management.index_version_manager:
+    class: Drupal\elasticsearch_helper_index_management\IndexVersionManager
+    arguments: ['@database']
