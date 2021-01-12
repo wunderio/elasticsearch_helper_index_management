@@ -3,7 +3,6 @@
 namespace Drupal\elasticsearch_helper_index_management\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\elasticsearch_helper_index_management\Index;
 
 /**
  * Index Create Version confirmation class.

@@ -86,6 +86,23 @@ class Index {
   }
 
   /**
+   * Returns the current version of the index.
+   *
+   * @return int
+   *   The version number || False if no version is found.
+   */
+  public function currentVersion() {
+    if ($this->isVersioned()) {
+      /** @var \Drupal\elasticsearch_helper_index_management\IndexVersionManager $version_manager */
+      $version_manager = \Drupal::service('elasticsearch_helper_index_management.index_version_manager');
+
+      return $version_manager->getCurrentVersion($this->getId());
+    }
+
+    return FALSE;
+  }
+
+  /**
    * Returns entity type that index plugin manages.
    *
    * @return string|null
