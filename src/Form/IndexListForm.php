@@ -68,6 +68,7 @@ class IndexListForm extends FormBase {
       $this->t('Bundle'),
       $this->t('Indexed'),
       $this->t('Failed'),
+      $this->t('Versioned'),
       $this->t('Operations'),
     ];
 
@@ -110,6 +111,7 @@ class IndexListForm extends FormBase {
           $index->getBundle() ?: '-',
           $this->getSuccessfulCount($index),
           $this->getErrorCount($index),
+          $plugin['versioned'] ? 'Yes' : 'No',
           [
             'data' => [
               '#type' => 'operations',
