@@ -144,6 +144,13 @@ class IndexViewForm extends FormBase implements ContainerInjectionInterface {
       '#weight' => 20,
     ];
 
+    $form['actions']['create_version'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Create New Version'),
+      '#op' => 'create_version',
+      '#weight' => 20,
+    ];
+
     $form['actions']['drop'] = [
       '#type' => 'submit',
       '#value' => $this->t('Drop index'),

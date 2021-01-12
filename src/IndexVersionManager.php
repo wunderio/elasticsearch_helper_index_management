@@ -3,6 +3,7 @@
 namespace Drupal\elasticsearch_helper_index_management;
 
 use Drupal\Core\Database\Driver\mysql\Connection;
+use Throwable;
 
 /**
  * Class IndexVersionManager.
@@ -51,18 +52,24 @@ class IndexVersionManager implements IndexVersionManagerInterface {
     $version = $current ? $current + 1 : 1;
 
     if ($current) {
-      return (bool) $this->database->update(static::TABLE)
+      $query = $this->database->update(static::TABLE)
         ->fields(['version' => $version])
-        ->condition('index_plugin', $plugin_id)
-        ->execute();
+        ->condition('index_plugin', $plugin_id);
     }
     else {
-      return (bool) $this->database->insert(static::TABLE)
+      $query = $this->database->insert(static::TABLE)
         ->fields([
           'version' => $version,
           'index_plugin' => $plugin_id,
-        ])
-        ->execute();
+        ]);
+    }
+
+    try {
+      $query->execute();
+      return TRUE;
+    }
+    catch (Throwable $e) {
+      return FALSE;
     }
 
     // @todo Setup index.
