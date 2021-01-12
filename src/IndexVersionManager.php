@@ -42,4 +42,48 @@ class IndexVersionManager implements IndexVersionManagerInterface {
     return FALSE;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function incrementVersion($plugin_id): bool {
+    $current = $this->getCurrentVersion($plugin_id);
+
+    $version = $current ? $current + 1 : 1;
+
+    if ($current) {
+      return (bool) $this->database->update(static::TABLE)
+        ->fields(['version' => $version])
+        ->condition('index_plugin', $plugin_id)
+        ->execute();
+    }
+    else {
+      return (bool) $this->database->insert(static::TABLE)
+        ->fields([
+          'version' => $version,
+          'index_plugin' => $plugin_id,
+        ])
+        ->execute();
+    }
+
+    // @todo Setup index.
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function decrementVersion($plugin_id): bool {
+    $current = $this->getCurrentVersion($plugin_id);
+
+    if ($current && $current > 1) {
+      $version = $current - 1;
+
+      return (bool) $this->database->update(static::TABLE)
+        ->fields(['version' => $version])
+        ->condition('index_plugin', $plugin_id)
+        ->execute();
+    }
+
+    return FALSE;
+  }
+
 }

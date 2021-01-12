@@ -18,4 +18,26 @@ interface IndexVersionManagerInterface {
    */
   public function getCurrentVersion($plugin_id);
 
+  /**
+   * Increment index plugin version.
+   *
+   * @param string $plugin_id
+   *   The index plugin id.
+   *
+   * @return bool
+   *   Return true on success.
+   */
+  public function incrementVersion($plugin_id) : bool;
+
+  /**
+   * Decrement index plugin version.
+   *
+   * @param string $plugin_id
+   *   The index plugin id.
+   *
+   * @return bool
+   *   Return true on success.
+   */
+  public function decrementVersion($plugin_id) : bool;
+
 }
