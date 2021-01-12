@@ -71,6 +71,21 @@ class Index {
   }
 
   /**
+   * Return versioning status of the index plugin.
+   *
+   * @return bool
+   *   True if index is versioned.
+   */
+  public function isVersioned() {
+    $definition = $this->indexPlugin->getPluginDefinition();
+
+    if (isset($definition['versioned'])) {
+      return (bool) $definition['versioned'];
+    }
+    return FALSE;
+  }
+
+  /**
    * Returns entity type that index plugin manages.
    *
    * @return string|null
