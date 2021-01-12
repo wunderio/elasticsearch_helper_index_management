@@ -2,14 +2,40 @@
 
 namespace Drupal\elasticsearch_helper_index_management\Form;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\elasticsearch_helper_index_management\Index;
+use Drupal\elasticsearch_helper_index_management\IndexVersionManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Index overview form.
  */
-class IndexViewForm extends FormBase {
+class IndexViewForm extends FormBase implements ContainerInjectionInterface {
+
+  /**
+   * Index Version Manager Service
+   *
+   * @var \Drupal\elasticsearch_helper_index_management\IndexVersionManagerInterface
+   */
+  public $indexVersionManager;
+
+  /**
+   * IndexViewForm Constructor.
+   */
+  public function __construct(IndexVersionManagerInterface $index_version_manager) {
+    $this->indexVersionManager = $index_version_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('elasticsearch_helper_index_management.index_version_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -44,6 +70,16 @@ class IndexViewForm extends FormBase {
     $rows['bundle'] = [
       $this->t('Bundle'),
       $index->getBundle() ?: '-',
+    ];
+
+    $rows['versioned'] = [
+      $this->t('Versioned'),
+      $index->isVersioned() ? 'Yes' : 'No',
+    ];
+
+    $rows['current_version'] = [
+      $this->t('Current Version'),
+      $this->indexVersionManager->getCurrentVersion($index->getId()) ?: '-',
     ];
 
     $rows['index_name'] = [
