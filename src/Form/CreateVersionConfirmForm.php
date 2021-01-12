@@ -41,6 +41,8 @@ class CreateVersionConfirmForm extends IndexConfirmFormBase {
     $version_manager = \Drupal::service('elasticsearch_helper_index_management.index_version_manager');
     if ($version_manager->incrementVersion($index->getId())) {
       $this->messenger()->addStatus('A new version of the index has been created.');
+      // Setup the new index version.
+      $index->getPluginInstance()->setup();
     }
     else {
       $this->messenger()->addError('Index version cannot be created. Check the logs for error');
