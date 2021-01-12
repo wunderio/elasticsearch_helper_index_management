@@ -151,6 +151,16 @@ class IndexViewForm extends FormBase implements ContainerInjectionInterface {
       '#weight' => 20,
     ];
 
+    if ((int) $index->currentVersion() > 1) {
+      // @todo Check if the index exists.
+      $form['actions']['revert_version'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Revert Version'),
+        '#op' => 'revert_version',
+        '#weight' => 20,
+      ];
+    }
+
     $form['actions']['drop'] = [
       '#type' => 'submit',
       '#value' => $this->t('Drop index'),

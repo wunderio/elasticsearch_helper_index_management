@@ -34,13 +34,26 @@ elasticsearch_helper_index_management.index.create_version:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/create_version'
   defaults:
     _form: '\Drupal\elasticsearch_helper_index_management\Form\CreateVersionConfirmForm'
-    _title: 'Create New Version'
+    _title: 'Create Index Version'
   options:
     parameters:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
     _permission: 'configure elasticsearch helper'
+
+elasticsearch_helper_index_management.index.revert_version:
+  path: '/admin/config/search/elasticsearch_helper/index/{plugin}/revert_version'
+  defaults:
+    _form: '\Drupal\elasticsearch_helper_index_management\Form\RevertVersionConfirmForm'
+    _title: 'Revert Index Version'
+  options:
+    parameters:
+      plugin:
+        type: elasticsearch_index_plugin
+  requirements:
+    _permission: 'configure elasticsearch helper'
+
 
 elasticsearch_helper_index_management.index.reindex:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/reindex'
