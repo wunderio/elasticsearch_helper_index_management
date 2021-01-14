@@ -54,16 +54,9 @@ class IndexingStatusOperationManager implements IndexingStatusOperationManagerIn
   }
 
   /**
-   * Sets indexing status for index-able entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The index-able entity.
-   * @param $status
-   *   Status name.
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
-   *   The Elasticsearch index plugin which is indexing the object.
+   * {@inheritdoc}
    */
-  protected function setEntityIndexingStatus(EntityInterface $entity, $status, ElasticsearchIndexInterface $index_plugin) {
+  public function setEntityIndexingStatus(EntityInterface $entity, $status, ElasticsearchIndexInterface $index_plugin) {
     $this->indexingStatusManager->updateStatus([
       'index_plugin' => $index_plugin->getPluginId(),
       'status' => $status,
@@ -76,7 +69,7 @@ class IndexingStatusOperationManager implements IndexingStatusOperationManagerIn
    * Deletes indexing status for given entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface|null $index_plugin
    */
   protected function deleteEntityIndexingStatus(EntityInterface $entity, ElasticsearchIndexInterface $index_plugin = NULL) {
     $conditions = [
