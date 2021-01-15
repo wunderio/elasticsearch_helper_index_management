@@ -2,6 +2,7 @@
 
 namespace Drupal\elasticsearch_helper_index_management;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface;
 
 /**
@@ -34,9 +35,21 @@ interface IndexingStatusOperationManagerInterface {
    *
    * @param $object
    *   The index-able object.
-   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin|null
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface|null $index_plugin
    *   The Elasticsearch index plugin which is indexing the object.
    */
   public function deleteIndexingStatus($object, ElasticsearchIndexInterface $index_plugin = NULL);
+
+  /**
+   * Sets indexing status for index-able entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The index-able entity.
+   * @param $status
+   *   Status name.
+   * @param \Drupal\elasticsearch_helper\Plugin\ElasticsearchIndexInterface $index_plugin
+   *   The Elasticsearch index plugin which is indexing the object.
+   */
+  public function setEntityIndexingStatus(EntityInterface $entity, $status, ElasticsearchIndexInterface $index_plugin);
 
 }
