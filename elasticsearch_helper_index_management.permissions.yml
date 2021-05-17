@@ -1,0 +1,19 @@
+administer elasticsearch helper index plugins:
+  title: 'Administer Elasticsearch Helper Index Plugins'
+  description: 'Allow users to administer Elasticsearch helper index plugins'
+  restrict access: true
+
+allow all elasticsearch helper index plugin operations:
+  title: 'Allow all Elasticsearch Helper Index Plugin operations'
+
+allow reindex elasticsearch helper index plugin operation:
+  title: 'Allow reindex Elasticsearch Helper Index Plugin operation'
+
+allow setup elasticsearch helper index plugin operation:
+  title: 'Allow setup Elasticsearch Helper Index Plugin operation'
+
+allow drop elasticsearch helper index plugin operation:
+  title: 'Allow drop Elasticsearch Helper Index Plugin operation'
+
+allow queue clear elasticsearch helper index plugin operation:
+  title: 'Allow clear indexing queue Elasticsearch Helper Index Plugin operation'
