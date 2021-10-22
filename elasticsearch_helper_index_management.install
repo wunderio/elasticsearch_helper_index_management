@@ -54,6 +54,7 @@ function elasticsearch_helper_index_management_schema() {
       'object' => ['id'],
       'entity' => ['id', 'entity_type'],
       'status' => ['status'],
+      'index_plugin_entity' => ['index_plugin', 'id', 'entity_type'],
     ],
   ];
 
@@ -65,4 +66,20 @@ function elasticsearch_helper_index_management_schema() {
  */
 function elasticsearch_helper_index_management_update_8001() {
   drupal_install_schema('elasticsearch_helper_index_management');
+}
+
+/**
+ * Add plugin/entity ID/entity type field index to the table.
+ */
+function elasticsearch_helper_index_management_update_8002() {
+  $database = \Drupal::database();
+  // Get table schema.
+  $table_schema = elasticsearch_helper_index_management_schema()['elasticsearch_helper_indexing_status'];
+  // Add index.
+  $database->schema()->addIndex(
+    'elasticsearch_helper_indexing_status',
+    'index_plugin_entity',
+    ['index_plugin', 'id', 'entity_type'],
+    $table_schema
+  );
 }
