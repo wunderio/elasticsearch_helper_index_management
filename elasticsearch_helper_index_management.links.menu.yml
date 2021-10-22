@@ -3,3 +3,9 @@ elasticsearch_helper_index_management.indices:
   description: 'Manage Elasticsearch indexes plugins'
   route_name: elasticsearch_helper_index_management.index.list
   parent: elasticsearch_helper.elasticsearch_helper_settings_form
+elasticsearch_helper_index_management.indices_direct_link:
+  title: 'Elasticsearch Helper Indices'
+  route_name: elasticsearch_helper_index_management.index.list
+  description: 'Manage Elasticsearch indexes plugins'
+  parent: system.admin_config_search
+  class: Drupal\elasticsearch_helper_index_management\Plugin\Menu\IndicesMenuLink

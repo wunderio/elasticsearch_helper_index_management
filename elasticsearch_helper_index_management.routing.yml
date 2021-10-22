@@ -4,7 +4,7 @@ elasticsearch_helper_index_management.index.list:
     _form: '\Drupal\elasticsearch_helper_index_management\Form\IndexListForm'
     _title: 'Index plugins'
   requirements:
-    _permission: 'configure elasticsearch helper'
+    _permission: 'administer elasticsearch helper index plugins'
 
 elasticsearch_helper_index_management.index.view:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}'
@@ -16,7 +16,7 @@ elasticsearch_helper_index_management.index.view:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configure elasticsearch helper'
+    _permission: 'administer elasticsearch helper index plugins'
 
 elasticsearch_helper_index_management.index.setup:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/setup'
@@ -28,7 +28,7 @@ elasticsearch_helper_index_management.index.setup:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configure elasticsearch helper'
+    _permission: 'allow all elasticsearch helper index plugin operations+allow setup elasticsearch helper index plugin operation'
 
 elasticsearch_helper_index_management.index.reindex:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/reindex'
@@ -40,7 +40,7 @@ elasticsearch_helper_index_management.index.reindex:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configure elasticsearch helper'
+    _permission: 'allow all elasticsearch helper index plugin operations+allow reindex elasticsearch helper index plugin operation'
 
 elasticsearch_helper_index_management.index.queue_clear:
   path: '/admin/config/search/elasticsearch_helper/index/clear-queue'
@@ -48,7 +48,7 @@ elasticsearch_helper_index_management.index.queue_clear:
     _form: '\Drupal\elasticsearch_helper_index_management\Form\QueueClearConfirmForm'
     _title: 'Clear indexing queue'
   requirements:
-    _permission: 'configure elasticsearch helper'
+    _permission: 'allow all elasticsearch helper index plugin operations+allow queue clear elasticsearch helper index plugin operation'
 
 elasticsearch_helper_index_management.index.drop:
   path: '/admin/config/search/elasticsearch_helper/index/{plugin}/drop'
@@ -60,4 +60,4 @@ elasticsearch_helper_index_management.index.drop:
       plugin:
         type: elasticsearch_index_plugin
   requirements:
-    _permission: 'configure elasticsearch helper'
+    _permission: 'allow all elasticsearch helper index plugin operations+allow drop elasticsearch helper index plugin operation'
