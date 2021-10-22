@@ -187,7 +187,21 @@ class IndexListForm extends FormBase {
           // Validate that the user has selected a plugin from the list.
           // If the plugin array is empty, it would throw an error in submit.
           if (empty(array_filter($form_state->getValue('listing')))) {
-            $form_state->setErrorByName('reindex', 'Select a plugin to be re-indexed from the list');
+            $form_state->setErrorByName('reindex', $this->t('You have to select at least one index plugin to be re-indexed from the list.'));
+          }
+          break;
+        case 'setup':
+          // Validate that the user has selected a plugin from the list.
+          // If the plugin array is empty, it would throw an error in submit.
+          if (empty(array_filter($form_state->getValue('listing')))) {
+            $form_state->setErrorByName('create', $this->t('You have to select at least one index plugin to be setup from the list.'));
+          }
+          break;
+        case 'drop':
+          // Validate that the user has selected a plugin from the list.
+          // If the plugin array is empty, it would throw an error in submit.
+          if (empty(array_filter($form_state->getValue('listing')))) {
+            $form_state->setErrorByName('drop', $this->t('You have to select at least one index plugin to be dropped from the list.'));
           }
           break;
       }
