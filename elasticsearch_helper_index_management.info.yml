@@ -1,8 +1,7 @@
 name: Elasticsearch Helper Index management
 type: module
 description: A module for managing Elasticsearch index plugins.
-core_version_requirement: ^8 || ^9
-core: 8.x
+core_version_requirement: ^8.8 || ^9 || ^10
 package: Elasticsearch Helper
 dependencies:
   - drupal:elasticsearch_helper
