@@ -7,6 +7,24 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function elasticsearch_helper_index_management_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the elasticsearch_helper_index_management module.
+    case 'help.page.elasticsearch_helper_index_management':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Elasticsearch Helper Index Management is a module that provides managing
+      re-indexes from the administrative UI and allows re-indexing of failed items.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
 
 /**
  * Implements hook_entity_delete().
