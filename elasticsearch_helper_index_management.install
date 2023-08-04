@@ -62,13 +62,6 @@ function elasticsearch_helper_index_management_schema() {
 }
 
 /**
- * Install schema if module was already previously installed.
- */
-function elasticsearch_helper_index_management_update_8001() {
-  drupal_install_schema('elasticsearch_helper_index_management');
-}
-
-/**
  * Add plugin/entity ID/entity type field index to the table.
  */
 function elasticsearch_helper_index_management_update_8002() {
