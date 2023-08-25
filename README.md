@@ -3,7 +3,7 @@
 `elasticsearch_helper_index_management` is a module that provides managing re-indexes from the administrative UI and allows re-indexing of failed items.
 ## Requirements
 
-* Drupal 8 or Drupal 9
+* Drupal 9 or 10
 * [Elasticsearch Helper][elasticsearch_helper] module
 
 ## Installation
